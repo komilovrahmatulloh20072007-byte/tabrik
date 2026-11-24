@@ -1,0 +1,14 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "(?<h>.*ustoz.*)" }],
+      "destination": "/ustoz/index.html"
+    },
+    {
+      "source": "/",
+      "destination": "/onam/index.html"
+    }
+  ]
+}

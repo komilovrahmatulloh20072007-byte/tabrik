@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="uz-Cyrl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Раҳмат, устоз! ✏️</title>
+<meta name="description" content="Синф раҳбарим ва она тили, адабиёт устозимга — шогирдидан">
+<meta name="theme-color" content="#FFD84D">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✏️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800;900&family=Rubik:wght@400;500;600;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#141414; --bg:#FFF8E7; --yellow:#FFD84D; --blue:#4D7CFE; --pink:#FF7AB6; --green:#3DDC97;
+    --orange:#FF8A3D; --purple:#A77BFF; --red:#FF4D4D; --white:#fff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    font-family:'Rubik',system-ui,sans-serif;color:var(--ink);overflow:hidden;-webkit-font-smoothing:antialiased;
+    background-color:var(--bg);
+    background-image:linear-gradient(rgba(77,124,254,.13) 1px,transparent 1px),linear-gradient(90deg,rgba(77,124,254,.13) 1px,transparent 1px);
+    background-size:26px 26px;
+  }
+  /* Стикер эффекти: оқ чегара + соя */
+  .stk{filter:drop-shadow(3px 0 0 #fff) drop-shadow(-3px 0 0 #fff) drop-shadow(0 3px 0 #fff) drop-shadow(0 -3px 0 #fff) drop-shadow(4px 6px 0 rgba(20,20,20,.18));overflow:visible}
+  .wiggle{animation:wiggle 2.4s ease-in-out infinite}
+  @keyframes wiggle{0%,100%{transform:rotate(var(--rot,0deg))}50%{transform:rotate(calc(var(--rot,0deg) + 7deg)) translateY(-4px)}}
+  .bob{animation:bob 1.8s ease-in-out infinite}
+  @keyframes bob{50%{transform:translateY(-8px)}}
+
+  /* ---------- Фондаги стикерлар ---------- */
+  .deco{position:fixed;z-index:1;pointer-events:none}
+
+  /* ---------- Кириш ---------- */
+  #intro{position:fixed;inset:0;z-index:50;background:var(--yellow);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;
+    transition:transform .9s cubic-bezier(.7,0,.3,1);
+    background-image:radial-gradient(rgba(20,20,20,.12) 1.5px,transparent 1.5px);background-size:22px 22px}
+  #intro.gone{transform:translateY(-105%)}
+  .bubble{position:relative;background:#fff;border:3px solid var(--ink);border-radius:22px;padding:16px 20px;max-width:300px;
+    font-weight:600;font-size:18px;line-height:1.4;text-align:center;box-shadow:5px 5px 0 var(--ink);margin-bottom:22px}
+  .bubble::after{content:"";position:absolute;left:50%;bottom:-16px;width:26px;height:26px;background:#fff;border-right:3px solid var(--ink);border-bottom:3px solid var(--ink);
+    transform:translateX(-50%) rotate(45deg)}
+  .intro-mascot{width:min(210px,52vw)}
+  .intro-mascot.jump{animation:jump .7s cubic-bezier(.3,1.6,.5,1)}
+  @keyframes jump{40%{transform:translateY(-40px) rotate(-8deg) scale(1.08)}}
+  .bbtn{border:3px solid var(--ink);border-radius:16px;background:var(--ink);color:#fff;font-family:'Unbounded';font-weight:800;font-size:16px;
+    padding:16px 26px;cursor:pointer;box-shadow:5px 5px 0 var(--pink);transition:transform .15s, box-shadow .15s}
+  .bbtn:active{transform:translate(4px,4px);box-shadow:1px 1px 0 var(--pink)}
+  #openBtn{margin-top:26px}
+
+  /* ---------- Карталар тахлами ---------- */
+  #deck{position:fixed;inset:0;z-index:5;display:grid;place-items:center;padding:18px 16px 104px}
+  .card{
+    position:absolute;width:min(430px,calc(100% - 32px));height:min(650px,calc(100svh - 140px));top:18px;
+    border:3px solid var(--ink);border-radius:30px;box-shadow:7px 7px 0 var(--ink);
+    padding:28px 22px 24px;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;
+    transition:transform .65s cubic-bezier(.3,1.25,.5,1), opacity .5s;will-change:transform;
+  }
+  .card.dragging{transition:none}
+  .card > *{flex-shrink:0}
+  .card > :first-child{margin-top:auto}
+  .card > :last-child{margin-bottom:auto}
+  .c-yellow{background:var(--yellow)} .c-blue{background:#BFD0FF} .c-pink{background:#FFD0E5} .c-green{background:#C6F5DE}
+  .c-orange{background:#FFDABF} .c-purple{background:#E2D4FF} .c-white{background:#fff}
+
+  .tag{display:inline-block;background:var(--ink);color:#fff;font-family:'Unbounded';font-weight:600;font-size:11px;letter-spacing:.08em;
+    padding:7px 12px;border-radius:999px;margin-bottom:14px;transform:rotate(-2deg)}
+  h1,h2{font-family:'Unbounded';font-weight:900;line-height:1.02;letter-spacing:-.01em;text-transform:uppercase}
+  h1{font-size:clamp(40px,12vw,62px)}
+  h2{font-size:clamp(24px,7vw,34px);margin-bottom:14px}
+  .lead{font-size:16px;line-height:1.55;font-weight:500;max-width:340px}
+  .hl{background:var(--white);border:2.5px solid var(--ink);border-radius:10px;padding:0 6px;display:inline-block;transform:rotate(-2deg)}
+
+  /* Анимация: карта фаол бўлганда ичидагилар "сакраб" чиқади */
+  .pop{opacity:0;transform:scale(.6) rotate(var(--rot,0deg))}
+  .card.active .pop{opacity:1;transform:scale(1) rotate(var(--rot,0deg));transition:opacity .4s, transform .6s cubic-bezier(.3,1.7,.5,1);
+    transition-delay:calc(var(--d,0) * 110ms + 250ms)}
+
+  /* 1 — бош */
+  .hero-stickers{position:relative;width:100%;height:190px;margin-bottom:6px}
+  .hero-stickers svg{position:absolute}
+
+  /* 2 — бейжлар */
+  .badges{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin:10px 0 18px}
+  .badge{display:flex;align-items:center;gap:8px;border:3px solid var(--ink);border-radius:999px;padding:10px 16px 10px 10px;
+    font-weight:700;font-size:16px;box-shadow:4px 4px 0 var(--ink);background:#fff}
+  .badge svg{width:34px;height:34px}
+
+  /* 3 — хат */
+  .paper{position:relative;width:100%;background:#fff;border:3px solid var(--ink);border-radius:18px;padding:22px 18px 78px 22px;text-align:left;min-height:330px;
+    background-image:repeating-linear-gradient(transparent 0 33px,rgba(77,124,254,.25) 33px 35px);background-position:0 14px}
+  .paper p{font-family:'Caveat',cursive;font-weight:600;font-size:clamp(22px,6vw,26px);line-height:35px;white-space:pre-wrap}
+  .caret{display:inline-block;width:2px;height:24px;background:var(--blue);vertical-align:-4px;margin-left:2px;animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .writer{position:absolute;right:-10px;bottom:-22px;width:84px}
+  .writer.writing{animation:scribble .35s ease-in-out infinite}
+  @keyframes scribble{0%,100%{transform:rotate(0) translate(0,0)}25%{transform:rotate(-6deg) translate(-3px,2px)}75%{transform:rotate(5deg) translate(3px,-2px)}}
+
+  /* 4 — Навоий */
+  .quote-wrap{position:relative;width:100%;margin-top:8px}
+  .qbubble{background:#fff;border:3px solid var(--ink);border-radius:24px;padding:22px 18px;box-shadow:5px 5px 0 var(--ink);position:relative}
+  .qbubble::after{content:"";position:absolute;left:42px;bottom:-15px;width:24px;height:24px;background:#fff;border-right:3px solid var(--ink);border-bottom:3px solid var(--ink);transform:rotate(45deg)}
+  .qbubble p{font-family:'Caveat';font-weight:700;font-size:clamp(25px,6.6vw,30px);line-height:1.25}
+  .qbubble small{display:block;margin-top:10px;font-family:'Unbounded';font-weight:600;font-size:11px;letter-spacing:.1em}
+  .quote-row{display:flex;align-items:flex-end;gap:10px;margin-top:22px;text-align:left}
+  .quote-row svg{width:96px;flex:none}
+  .quote-row p{font-weight:500;font-size:15px;line-height:1.5}
+
+  /* 5 — айланувчи карталар */
+  .flips{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;width:100%;margin-top:4px}
+  .flip{perspective:700px;height:118px;cursor:pointer}
+  .flip-in{position:relative;width:100%;height:100%;transition:transform .6s cubic-bezier(.3,1.3,.5,1);transform-style:preserve-3d}
+  .flip.on .flip-in{transform:rotateY(180deg)}
+  .face{position:absolute;inset:0;border:3px solid var(--ink);border-radius:18px;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px;box-shadow:4px 4px 0 var(--ink)}
+  .face svg{width:48px;height:48px;margin-bottom:6px}
+  .face b{font-size:15px;font-weight:700;line-height:1.15}
+  .back{transform:rotateY(180deg);background:var(--ink);color:#fff;font-size:14px;line-height:1.35;font-weight:500}
+  .hint{margin-top:14px;font-size:13px;font-weight:600;opacity:.7}
+
+  /* 6 — табель */
+  .report{width:100%;background:#fff;border:3px solid var(--ink);border-radius:20px;overflow:hidden;box-shadow:5px 5px 0 var(--ink);text-align:left}
+  .rrow{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;border-top:2.5px solid var(--ink);cursor:pointer;user-select:none}
+  .rrow:first-child{border-top:0}
+  .rrow:active{background:#FFF4C7}
+  .rrow span{font-weight:700;font-size:15px}
+  .stars{display:flex;gap:2px;flex:none}
+  .stars svg{width:24px;height:24px;transition:transform .3s}
+  .stars svg{--sf:#E8E2D3}
+  .stars svg.lit{--sf:#FFD84D;animation:starpop .45s cubic-bezier(.3,1.8,.5,1)}
+  @keyframes starpop{0%{transform:scale(.3) rotate(-40deg)}100%{transform:scale(1)}}
+  .verdict{position:relative;height:120px;width:100%;margin-top:14px}
+  .stamp{position:absolute;left:50%;top:50%;width:120px;transform:translate(-50%,-50%) scale(0) rotate(-14deg);transition:transform .5s cubic-bezier(.3,1.7,.5,1)}
+  .stamp.show{transform:translate(-50%,-50%) scale(1) rotate(-14deg)}
+
+  /* 7 — тилаклар */
+  .notes{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;width:100%;margin-top:6px}
+  .note{border:3px solid var(--ink);padding:16px 10px 14px;min-height:96px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+    box-shadow:4px 4px 0 var(--ink);position:relative;border-radius:4px}
+  .note::before{content:"";position:absolute;top:-11px;left:50%;width:46px;height:18px;transform:translateX(-50%) rotate(-3deg);background:rgba(255,255,255,.7);border:2px solid rgba(20,20,20,.25)}
+  .note .e{font-size:30px}
+  .note b{font-size:15px;font-weight:700;line-height:1.2}
+
+
+  /* 8 — устоздан хабар */
+  .field{width:100%;border:3px solid var(--ink);border-radius:16px;background:#fff;font-family:'Rubik';font-size:16px;padding:12px 14px;color:var(--ink);
+    box-shadow:4px 4px 0 var(--ink);outline:none;transition:box-shadow .15s, transform .15s}
+  .field:focus{transform:translate(-1px,-1px);box-shadow:6px 6px 0 var(--blue)}
+  textarea.field{min-height:150px;resize:none;line-height:1.5;font-family:'Caveat';font-weight:700;font-size:23px;
+    background-image:repeating-linear-gradient(transparent 0 33px,rgba(77,124,254,.22) 33px 35px);background-position:0 10px}
+  .msg-form{width:100%;display:flex;flex-direction:column;gap:14px;margin-top:4px;text-align:left}
+  .msg-form label{font-family:'Unbounded';font-weight:600;font-size:11px;letter-spacing:.06em;margin-bottom:-6px}
+  .msg-meta{display:flex;justify-content:space-between;font-size:12px;font-weight:600;opacity:.6;margin-top:-6px}
+  #sendBtn{width:100%;box-shadow:5px 5px 0 var(--blue)}
+  #sendBtn:disabled{opacity:.6;pointer-events:none}
+  .sent{display:none;flex-direction:column;align-items:center;gap:12px}
+  .sent.show{display:flex;animation:sentIn .6s cubic-bezier(.3,1.6,.5,1)}
+  @keyframes sentIn{0%{transform:scale(.5);opacity:0}100%{transform:none;opacity:1}}
+  .sent svg{width:110px}
+  .sent h2{margin:0}
+  .err{color:var(--red);font-weight:600;font-size:14px;min-height:18px;text-align:center}
+  .fly-plane{position:fixed;width:80px;z-index:70;pointer-events:none;animation:planeFly 1.4s cubic-bezier(.5,0,.6,1) forwards}
+  @keyframes planeFly{to{transform:translate(70vw,-90vh) rotate(18deg) scale(.5);opacity:0}}
+
+  /* 9 — якун */
+  .big-thanks{font-size:clamp(50px,15vw,78px);-webkit-text-stroke:0;color:var(--ink)}
+  .big-thanks span{display:inline-block;color:var(--pink);-webkit-text-stroke:3px var(--ink);text-shadow:5px 5px 0 var(--ink)}
+  .sig{font-family:'Caveat';font-weight:700;font-size:30px;margin-top:16px}
+  #confettiBtn{margin-top:20px;box-shadow:5px 5px 0 var(--blue)}
+
+  /* ---------- Пастки панел ---------- */
+  #nav{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;align-items:center;justify-content:center;gap:14px;
+    padding:14px 16px calc(16px + env(safe-area-inset-bottom));opacity:0;transform:translateY(30px);transition:all .6s .3s}
+  #nav.show{opacity:1;transform:none}
+  .nb{height:54px;min-width:54px;border:3px solid var(--ink);border-radius:16px;background:#fff;font-family:'Unbounded';font-weight:800;font-size:15px;
+    cursor:pointer;box-shadow:4px 4px 0 var(--ink);transition:transform .12s, box-shadow .12s, opacity .3s;padding:0 18px}
+  .nb:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+  .nb:disabled{opacity:.35;pointer-events:none}
+  #next{background:var(--yellow);min-width:150px}
+  #count{font-family:'Unbounded';font-weight:800;font-size:14px;background:var(--ink);color:#fff;border-radius:12px;padding:10px 12px;min-width:62px;text-align:center}
+
+  #fx{position:fixed;inset:0;pointer-events:none;z-index:60}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+
+<!-- ================= СТИКЕРЛАР (SVG) ================= -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <!-- Ручка ушлаган китобча -->
+    <symbol id="mascot" viewBox="0 0 150 170">
+      <path d="M58 140 L55 158 M92 140 L95 158" stroke="#141414" stroke-width="5" stroke-linecap="round"/>
+      <ellipse cx="51" cy="160" rx="10" ry="6" fill="#141414"/><ellipse cx="99" cy="160" rx="10" ry="6" fill="#141414"/>
+      <rect x="42" y="24" width="78" height="114" rx="9" fill="#fff" stroke="#141414" stroke-width="5"/>
+      <path d="M112 34 V128 M104 30 V132" stroke="#141414" stroke-width="2" opacity=".35"/>
+      <rect x="30" y="18" width="80" height="120" rx="10" fill="#4D7CFE" stroke="#141414" stroke-width="5"/>
+      <rect x="30" y="18" width="16" height="120" rx="8" fill="#3A63D8" stroke="#141414" stroke-width="5"/>
+      <rect x="56" y="32" width="44" height="15" rx="5" fill="#FFD84D" stroke="#141414" stroke-width="3"/>
+      <path d="M62 39.5 H94" stroke="#141414" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="4 4"/>
+      <circle cx="64" cy="76" r="7" fill="#141414"/><circle cx="66.5" cy="73.5" r="2.4" fill="#fff"/>
+      <circle cx="92" cy="76" r="7" fill="#141414"/><circle cx="94.5" cy="73.5" r="2.4" fill="#fff"/>
+      <ellipse cx="55" cy="90" rx="7" ry="4.5" fill="#FF7AB6" opacity=".85"/><ellipse cx="101" cy="90" rx="7" ry="4.5" fill="#FF7AB6" opacity=".85"/>
+      <path d="M68 90 Q78 102 88 90" stroke="#141414" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+      <path d="M33 92 Q14 84 12 64" stroke="#141414" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <circle cx="12" cy="60" r="8" fill="#FFE0C2" stroke="#141414" stroke-width="4"/>
+      <path d="M107 96 Q126 96 130 80" stroke="#141414" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <g transform="translate(131 70) rotate(-62)">
+        <rect x="-34" y="-6" width="52" height="12" rx="6" fill="#FF7AB6" stroke="#141414" stroke-width="3.5"/>
+        <rect x="-30" y="-10" width="18" height="4" rx="2" fill="#141414"/>
+        <polygon points="18,-6 32,0 18,6" fill="#E9E9E9" stroke="#141414" stroke-width="3.5" stroke-linejoin="round"/>
+        <circle cx="32" cy="0" r="2" fill="#141414"/>
+      </g>
+      <circle cx="130" cy="78" r="8.5" fill="#FFE0C2" stroke="#141414" stroke-width="4"/>
+    </symbol>
+
+    <symbol id="star" viewBox="0 0 100 100">
+      <polygon points="50,6 62,37 95,38 69,58 78,92 50,73 22,92 31,58 5,38 38,37" style="fill:var(--sf,#FFD84D)" stroke="#141414" stroke-width="6" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="heart" viewBox="0 0 100 100">
+      <path d="M50 88 C20 66 6 50 6 32 C6 18 17 8 30 8 C40 8 46 14 50 22 C54 14 60 8 70 8 C83 8 94 18 94 32 C94 50 80 66 50 88Z" fill="#FF7AB6" stroke="#141414" stroke-width="6" stroke-linejoin="round"/>
+      <ellipse cx="30" cy="28" rx="7" ry="5" fill="#fff" opacity=".7" transform="rotate(-30 30 28)"/>
+    </symbol>
+    <symbol id="apple" viewBox="0 0 100 100">
+      <path d="M50 30 C40 22 18 22 14 44 C10 66 26 93 40 93 C46 93 48 89 50 89 C52 89 54 93 60 93 C74 93 90 66 86 44 C82 22 60 22 50 30Z" fill="#FF4D4D" stroke="#141414" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M50 30 L53 12" stroke="#141414" stroke-width="6" stroke-linecap="round"/>
+      <path d="M55 18 C62 6 78 8 80 12 C74 20 62 22 55 18Z" fill="#3DDC97" stroke="#141414" stroke-width="5" stroke-linejoin="round"/>
+      <ellipse cx="30" cy="46" rx="6" ry="10" fill="#fff" opacity=".5" transform="rotate(20 30 46)"/>
+    </symbol>
+    <symbol id="pencil" viewBox="0 0 100 100">
+      <g transform="rotate(-40 50 50)">
+        <rect x="8" y="40" width="14" height="20" rx="4" fill="#FF7AB6" stroke="#141414" stroke-width="5"/>
+        <rect x="20" y="40" width="8" height="20" fill="#C9C9C9" stroke="#141414" stroke-width="5"/>
+        <rect x="28" y="40" width="46" height="20" fill="#FFD84D" stroke="#141414" stroke-width="5"/>
+        <polygon points="74,40 94,50 74,60" fill="#F4D3A6" stroke="#141414" stroke-width="5" stroke-linejoin="round"/>
+        <polygon points="86,46 94,50 86,54" fill="#141414"/>
+      </g>
+    </symbol>
+    <symbol id="pen" viewBox="0 0 100 100">
+      <g transform="rotate(-40 50 50)">
+        <rect x="14" y="43" width="62" height="14" rx="7" fill="#4D7CFE" stroke="#141414" stroke-width="5"/>
+        <rect x="8" y="41" width="26" height="18" rx="7" fill="#141414"/>
+        <rect x="12" y="35" width="26" height="5" rx="2.5" fill="#141414"/>
+        <polygon points="76,44 93,50 76,56" fill="#E9E9E9" stroke="#141414" stroke-width="5" stroke-linejoin="round"/>
+      </g>
+    </symbol>
+    <symbol id="cap" viewBox="0 0 100 100">
+      <path d="M26 46 L26 66 C26 76 74 76 74 66 L74 46" fill="#2B2B2B" stroke="#141414" stroke-width="6" stroke-linejoin="round"/>
+      <polygon points="50,18 95,38 50,58 5,38" fill="#3A3A3A" stroke="#141414" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M50 38 L84 46 L84 68" stroke="#FFD84D" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <circle cx="84" cy="72" r="6" fill="#FFD84D" stroke="#141414" stroke-width="4"/>
+    </symbol>
+    <symbol id="bulb" viewBox="0 0 100 100">
+      <path d="M50 8 L50 0 M20 18 L14 12 M80 18 L86 12 M8 44 H0 M92 44 H100" stroke="#141414" stroke-width="5" stroke-linecap="round" transform="translate(0 4)"/>
+      <path d="M50 16 C30 16 20 32 22 46 C24 58 34 62 36 74 H64 C66 62 76 58 78 46 C80 32 70 16 50 16Z" fill="#FFD84D" stroke="#141414" stroke-width="6" stroke-linejoin="round"/>
+      <rect x="36" y="74" width="28" height="16" rx="5" fill="#C9C9C9" stroke="#141414" stroke-width="5"/>
+      <path d="M42 46 Q50 38 58 46" stroke="#141414" stroke-width="4" fill="none" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="books" viewBox="0 0 100 100">
+      <rect x="12" y="66" width="76" height="20" rx="4" fill="#3DDC97" stroke="#141414" stroke-width="5"/>
+      <rect x="18" y="44" width="66" height="22" rx="4" fill="#FF8A3D" stroke="#141414" stroke-width="5"/>
+      <rect x="10" y="22" width="70" height="22" rx="4" fill="#4D7CFE" stroke="#141414" stroke-width="5"/>
+      <path d="M22 33 H60 M30 55 H66 M24 76 H70" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="plane" viewBox="0 0 100 100">
+      <polygon points="6,50 94,12 66,88 46,62" fill="#fff" stroke="#141414" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M94 12 L46 62 L44 84 L56 70" fill="#E2D4FF" stroke="#141414" stroke-width="6" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="spark" viewBox="0 0 100 100">
+      <path d="M50 4 C54 38 62 46 96 50 C62 54 54 62 50 96 C46 62 38 54 4 50 C38 46 46 38 50 4Z" fill="#A77BFF" stroke="#141414" stroke-width="5" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="school" viewBox="0 0 100 100">
+      <polygon points="50,10 92,38 8,38" fill="#FF4D4D" stroke="#141414" stroke-width="6" stroke-linejoin="round"/>
+      <rect x="16" y="38" width="68" height="50" fill="#FFD84D" stroke="#141414" stroke-width="6"/>
+      <rect x="42" y="60" width="16" height="28" fill="#fff" stroke="#141414" stroke-width="5"/>
+      <rect x="24" y="48" width="12" height="12" fill="#BFD0FF" stroke="#141414" stroke-width="4"/>
+      <rect x="64" y="48" width="12" height="12" fill="#BFD0FF" stroke="#141414" stroke-width="4"/>
+      <circle cx="50" cy="28" r="5" fill="#fff" stroke="#141414" stroke-width="3"/>
+    </symbol>
+    <symbol id="speech" viewBox="0 0 100 100">
+      <path d="M14 14 H86 C90 14 94 18 94 22 V62 C94 66 90 70 86 70 H40 L22 88 L26 70 H14 C10 70 6 66 6 62 V22 C6 18 10 14 14 14Z" fill="#3DDC97" stroke="#141414" stroke-width="6" stroke-linejoin="round"/>
+      <circle cx="30" cy="42" r="5" fill="#141414"/><circle cx="50" cy="42" r="5" fill="#141414"/><circle cx="70" cy="42" r="5" fill="#141414"/>
+    </symbol>
+    <symbol id="hands" viewBox="0 0 100 100">
+      <path d="M8 54 L30 36 L50 46 L70 36 L92 54 L66 80 C60 86 52 86 46 80 Z" fill="#FFE0C2" stroke="#141414" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M50 46 L36 60 M58 56 L46 68 M64 64 L54 74" stroke="#141414" stroke-width="5" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="sprout" viewBox="0 0 100 100">
+      <path d="M50 92 V48" stroke="#141414" stroke-width="6" stroke-linecap="round"/>
+      <path d="M50 54 C30 54 14 40 14 22 C34 22 50 34 50 54Z" fill="#3DDC97" stroke="#141414" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M50 46 C66 46 84 34 86 14 C66 14 50 26 50 46Z" fill="#3DDC97" stroke="#141414" stroke-width="5" stroke-linejoin="round"/>
+      <rect x="28" y="80" width="44" height="14" rx="5" fill="#FF8A3D" stroke="#141414" stroke-width="5"/>
+    </symbol>
+    <symbol id="quill" viewBox="0 0 100 100">
+      <path d="M86 8 C50 14 26 40 20 76 C40 70 70 50 86 8Z" fill="#fff" stroke="#141414" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M86 8 L14 92" stroke="#141414" stroke-width="5" stroke-linecap="round"/>
+      <path d="M44 46 L58 46 M36 58 L50 58" stroke="#141414" stroke-width="4" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="grade5" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="42" fill="#fff" stroke="#FF4D4D" stroke-width="7"/>
+      <circle cx="50" cy="50" r="33" fill="none" stroke="#FF4D4D" stroke-width="3" stroke-dasharray="5 5"/>
+      <text x="50" y="66" text-anchor="middle" font-family="Unbounded, Arial Black, sans-serif" font-weight="900" font-size="48" fill="#FF4D4D">5</text>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- Фондаги стикерлар -->
+<svg class="deco stk wiggle" style="left:4px;top:70px;width:54px;--rot:-14deg"><use href="#star"/></svg>
+<svg class="deco stk wiggle" style="right:6px;top:120px;width:50px;--rot:12deg;animation-delay:-1s"><use href="#heart"/></svg>
+<svg class="deco stk wiggle" style="left:2px;bottom:150px;width:52px;--rot:10deg;animation-delay:-.6s"><use href="#spark"/></svg>
+<svg class="deco stk wiggle" style="right:2px;bottom:190px;width:58px;--rot:-6deg;animation-delay:-1.6s"><use href="#pencil"/></svg>
+
+<!-- ================= КИРИШ ================= -->
+<div id="intro">
+  <div class="bubble">Устоз, сизга кичкина сюрприз бор! 🎁</div>
+  <svg class="stk intro-mascot bob" viewBox="0 0 150 170"><use href="#mascot"/></svg>
+  <button class="bbtn" id="openBtn">ОЧИШ ✏️</button>
+</div>
+
+<!-- ================= КАРТАЛАР ================= -->
+<div id="deck">
+
+  <!-- 1 -->
+  <section class="card c-yellow">
+    <div class="hero-stickers">
+      <svg class="stk pop" style="left:50%;top:0;width:150px;margin-left:-75px;--d:0" viewBox="0 0 150 170"><use href="#mascot"/></svg>
+      <svg class="stk pop wiggle" style="left:4%;top:20px;width:62px;--rot:-12deg;--d:2"><use href="#apple"/></svg>
+      <svg class="stk pop wiggle" style="right:4%;top:6px;width:58px;--rot:14deg;--d:3;animation-delay:-1s"><use href="#star"/></svg>
+      <svg class="stk pop wiggle" style="left:12%;top:120px;width:52px;--rot:8deg;--d:4;animation-delay:-.5s"><use href="#books"/></svg>
+      <svg class="stk pop wiggle" style="right:10%;top:118px;width:56px;--rot:-10deg;--d:5;animation-delay:-1.4s"><use href="#cap"/></svg>
+    </div>
+    <div class="tag pop" style="--d:5">СИНФ РАҲБАРИМГА 💛</div>
+    <h1 class="pop" style="--d:6">Раҳмат,<br>устоз!</h1>
+    <p class="lead pop" style="--d:7;margin-top:14px">Мактабни битирганимга <span class="hl">2 йилдан</span> ошди. Лекин сиз берган сабоқлар ҳали ҳам ҳар куни мен билан.</p>
+  </section>
+
+  <!-- 2 -->
+  <section class="card c-blue">
+    <div class="tag pop">СИЗ ЎЗИ КИМСИЗ?</div>
+    <h2 class="pop" style="--d:1">Сиз мен учун…</h2>
+    <div class="badges">
+      <div class="badge pop" style="--d:2;--rot:-4deg"><svg class="stk"><use href="#school"/></svg>Синф раҳбарим</div>
+      <div class="badge pop" style="--d:3;--rot:3deg;background:#FFD0E5"><svg class="stk"><use href="#pen"/></svg>Она тили устозим</div>
+      <div class="badge pop" style="--d:4;--rot:-2deg;background:#C6F5DE"><svg class="stk"><use href="#books"/></svg>Адабиёт устозим</div>
+      <div class="badge pop" style="--d:5;--rot:4deg;background:#FFD84D"><svg class="stk"><use href="#heart"/></svg>Иккинчи онамиз</div>
+    </div>
+    <p class="lead pop" style="--d:6">Сиз бизга фақат дарс ўтмагансиз. Синфимизни <span class="hl">бир оилага</span> айлантиргансиз ва ҳар биримизнинг ташвишимизни ўзингизникидек кўргансиз.</p>
+  </section>
+
+  <!-- 3 -->
+  <section class="card c-white">
+    <div class="tag pop">СИЗГА ХАТ ✉️</div>
+    <div class="paper pop" style="--d:1">
+      <p id="typed"></p>
+      <svg class="stk writer" id="writer" viewBox="0 0 150 170"><use href="#mascot"/></svg>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section class="card c-purple">
+    <div class="tag pop">ҲАЗРАТ НАВОИЙ АЙТГАНЛАРИДЕК</div>
+    <div class="quote-wrap pop" style="--d:1">
+      <div class="qbubble">
+        <p>Ҳақ йўлида ким сенга бир ҳарф ўқитмиш ранж ила,<br>Айламак бўлмас адо онинг ҳақин юз ганж ила.</p>
+        <small>— АЛИШЕР НАВОИЙ</small>
+      </div>
+    </div>
+    <div class="quote-row pop" style="--d:3">
+      <svg class="stk bob" viewBox="0 0 150 170"><use href="#mascot"/></svg>
+      <p>Сиз менга битта эмас, <b>минглаб ҳарф</b> ўргатгансиз. Бу қарзни ҳеч қачон тўлай олмайман — фақат раҳмат айта оламан.</p>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section class="card c-green">
+    <div class="tag pop">ДАРСДАН ТАШҚАРИ</div>
+    <h2 class="pop" style="--d:1">Сиздан ўрганганларим</h2>
+    <div class="flips" id="flips"></div>
+    <p class="hint pop" style="--d:8">👆 Карталарни босиб айлантиринг</p>
+  </section>
+
+  <!-- 6 -->
+  <section class="card c-orange">
+    <div class="tag pop">ЭНДИ НАВБАТ МЕНДА</div>
+    <h2 class="pop" style="--d:1">Устозга табель</h2>
+    <div class="report pop" style="--d:2" id="report"></div>
+    <div class="verdict">
+      <svg class="stk stamp" id="stamp" viewBox="0 0 100 100"><use href="#grade5"/></svg>
+    </div>
+    <p class="hint" id="rhint">👆 Ҳар бир қаторни босинг</p>
+  </section>
+
+  <!-- 7 -->
+  <section class="card c-pink">
+    <div class="tag pop">СИЗГА ТИЛАКЛАРИМ</div>
+    <h2 class="pop" style="--d:1">Тилаб қоламан</h2>
+    <div class="notes">
+      <div class="note pop" style="--d:2;--rot:-4deg;background:var(--yellow)"><span class="e">💪</span><b>Мустаҳкам соғлик</b></div>
+      <div class="note pop" style="--d:3;--rot:3deg;background:#BFD0FF"><span class="e">🌿</span><b>Узоқ умр</b></div>
+      <div class="note pop" style="--d:4;--rot:2deg;background:#C6F5DE"><span class="e">😊</span><b>Ҳар куни қувонч</b></div>
+      <div class="note pop" style="--d:5;--rot:-3deg;background:#fff"><span class="e">🎓</span><b>Аълочи шогирдлар</b></div>
+      <div class="note pop" style="--d:6;--rot:-2deg;background:#E2D4FF"><span class="e">🏡</span><b>Оилангизга тинчлик</b></div>
+      <div class="note pop" style="--d:7;--rot:4deg;background:#FFDABF"><span class="e">✨</span><b>Битмас илҳом</b></div>
+    </div>
+  </section>
+
+  <!-- 8 -->
+  <section class="card c-blue" id="msgCard">
+    <div id="msgWrap" style="width:100%;display:flex;flex-direction:column;align-items:center">
+      <svg class="stk pop bob" style="width:96px;--d:0" viewBox="0 0 150 170"><use href="#mascot"/></svg>
+      <div class="tag pop" style="--d:1;margin-top:10px">ЭНДИ СИЗНИНГ НАВБАТИНГИЗ 💌</div>
+      <h2 class="pop" style="--d:2">Менга бир оғиз ёзинг</h2>
+      <p class="lead pop" style="--d:3;margin-bottom:16px">Устоз, сиз ҳам бир-икки оғиз ёзиб қолдирсангиз, мен учун энг катта совға бўлади.</p>
+      <form class="msg-form pop" style="--d:4" id="msgForm" autocomplete="off">
+        <label for="mName">ИСМИНГИЗ (ихтиёрий)</label>
+        <input class="field" id="mName" maxlength="80" placeholder="Масалан: устозингиз">
+        <label for="mText">ХАБАРИНГИЗ</label>
+        <textarea class="field" id="mText" maxlength="1500" placeholder="Шу ерга ёзинг…" required></textarea>
+        <div class="msg-meta"><span>✏️ Хабар тўғридан-тўғри менга келади</span><span id="mCount">0/1500</span></div>
+        <div class="err" id="mErr"></div>
+        <button class="bbtn" id="sendBtn" type="submit">ЮБОРИШ ✈️</button>
+      </form>
+    </div>
+    <div class="sent" id="sent">
+      <svg class="stk wiggle" viewBox="0 0 150 170"><use href="#mascot"/></svg>
+      <h2>Етиб борди! 💛</h2>
+      <p class="lead">Раҳмат, устоз! Хабарингизни ўқиб, жуда хурсанд бўламан.</p>
+      <button class="bbtn" id="againBtn" type="button" style="box-shadow:5px 5px 0 var(--pink)">ЯНА ЁЗИШ ✏️</button>
+    </div>
+  </section>
+
+  <!-- 9 -->
+  <section class="card c-yellow">
+    <div class="hero-stickers" style="height:170px">
+      <svg class="stk pop bob" style="left:50%;top:0;width:136px;margin-left:-68px;--d:0" viewBox="0 0 150 170"><use href="#mascot"/></svg>
+      <svg class="stk pop wiggle" style="left:6%;top:30px;width:56px;--rot:-10deg;--d:2"><use href="#heart"/></svg>
+      <svg class="stk pop wiggle" style="right:6%;top:24px;width:56px;--rot:10deg;--d:3;animation-delay:-1s"><use href="#plane"/></svg>
+    </div>
+    <h1 class="big-thanks pop" style="--d:4"><span>РАҲМАТ</span></h1>
+    <p class="lead pop" style="--d:5;margin-top:12px">Меҳнатингиз, сабрингиз ва меҳрингиз учун. Мендан бирор яхши нарса чиққан бўлса, унда <span class="hl">сизнинг ҳам улушингиз</span> бор.</p>
+    <div class="sig pop" style="--d:6">— Шогирдингиз Раҳматуллоҳ ✏️</div>
+    <button class="bbtn pop" style="--d:7" id="confettiBtn">🎉 САЛЮТ!</button>
+  </section>
+</div>
+
+<nav id="nav">
+  <button class="nb" id="prev" aria-label="Олдинги">←</button>
+  <div id="count">1/9</div>
+  <button class="nb" id="next">КЕЙИНГИ →</button>
+</nav>
+
+<canvas id="fx"></canvas>
+
+<script>
+/* ================= Конфетти ================= */
+const fx = document.getElementById('fx'), fctx = fx.getContext('2d');
+let parts = [], running = false;
+function sizeFx(){ fx.width = innerWidth * devicePixelRatio; fx.height = innerHeight * devicePixelRatio; }
+sizeFx(); addEventListener('resize', sizeFx);
+const COLS = ['#FFD84D','#4D7CFE','#FF7AB6','#3DDC97','#FF8A3D','#A77BFF','#FF4D4D'];
+function confetti(x, y, n = 80, power = 1){
+  const dpr = devicePixelRatio;
+  for(let i=0;i<n;i++){
+    const a = -Math.PI/2 + (Math.random()-.5) * Math.PI * 1.3, v = (6 + Math.random()*9) * power;
+    parts.push({ x:x*dpr, y:y*dpr, vx:Math.cos(a)*v*dpr, vy:Math.sin(a)*v*dpr, w:(6+Math.random()*8)*dpr, h:(4+Math.random()*6)*dpr,
+      r:Math.random()*6, vr:(Math.random()-.5)*.4, c:COLS[i % COLS.length], life:0, shape:Math.random() < .3 ? 1 : 0 });
+  }
+  if(!running){ running = true; requestAnimationFrame(stepFx); }
+}
+function stepFx(){
+  fctx.clearRect(0,0,fx.width,fx.height);
+  const dpr = devicePixelRatio;
+  parts.forEach(p=>{
+    p.vy += .35*dpr; p.vx *= .985; p.vy *= .985; p.x += p.vx; p.y += p.vy; p.r += p.vr; p.life++;
+    fctx.save(); fctx.translate(p.x,p.y); fctx.rotate(p.r); fctx.fillStyle = p.c; fctx.strokeStyle = '#141414'; fctx.lineWidth = 1.5*dpr;
+    if(p.shape){ fctx.beginPath(); fctx.arc(0,0,p.w/2,0,6.28); fctx.fill(); fctx.stroke(); }
+    else { fctx.fillRect(-p.w/2,-p.h/2,p.w,p.h); fctx.strokeRect(-p.w/2,-p.h/2,p.w,p.h); }
+    fctx.restore();
+  });
+  parts = parts.filter(p => p.y < fx.height + 50 && p.life < 400);
+  if(parts.length) requestAnimationFrame(stepFx); else { running = false; fctx.clearRect(0,0,fx.width,fx.height); }
+}
+
+/* ================= Карталар тахлами ================= */
+const cards = [...document.querySelectorAll('.card')];
+const prevB = document.getElementById('prev'), nextB = document.getElementById('next'), count = document.getElementById('count');
+let cur = -1;
+function layout(dragX = 0){
+  cards.forEach((c,i)=>{
+    const d = i - cur;
+    let t, o = 1, z = 100 - Math.abs(d);
+    if(d < 0){ t = `translateX(-130vw) rotate(-24deg)`; o = 0; }
+    else if(d === 0){ t = `translateX(${dragX}px) rotate(${dragX / 18}deg)`; }
+    else if(d === 1){ t = `translateY(16px) scale(.95) rotate(3.5deg)`; }
+    else if(d === 2){ t = `translateY(30px) scale(.9) rotate(-3deg)`; }
+    else { t = `translateY(40px) scale(.86)`; o = 0; }
+    c.style.transform = t; c.style.opacity = o; c.style.zIndex = z;
+    c.style.pointerEvents = d === 0 ? 'auto' : 'none';
+  });
+}
+function go(n){
+  if(n < 0 || n >= cards.length || n === cur) return;
+  cards.forEach(c => c.classList.remove('active'));
+  cur = n; layout();
+  const c = cards[n]; c.scrollTop = 0;
+  requestAnimationFrame(()=>c.classList.add('active'));
+  count.textContent = `${n+1}/${cards.length}`;
+  prevB.disabled = n === 0;
+  nextB.textContent = n === cards.length - 1 ? 'БОШИДАН ↺' : 'КЕЙИНГИ →';
+  onEnter(n);
+}
+nextB.onclick = ()=> cur === cards.length - 1 ? go(0) : go(cur + 1);
+prevB.onclick = ()=> go(cur - 1);
+addEventListener('keydown', e=>{
+  if(cur < 0 || /INPUT|TEXTAREA/.test(e.target.tagName)) return;
+  if(e.key === 'ArrowRight') go(cur + 1);
+  if(e.key === 'ArrowLeft') go(cur - 1);
+});
+
+/* Бармоқ билан суриш */
+let sx = 0, sy = 0, dx = 0, dragging = false, locked = null;
+const deck = document.getElementById('deck');
+deck.addEventListener('touchstart', e=>{ sx = e.touches[0].clientX; sy = e.touches[0].clientY; dx = 0; dragging = true; locked = null; }, {passive:true});
+deck.addEventListener('touchmove', e=>{
+  if(!dragging || cur < 0) return;
+  const mx = e.touches[0].clientX - sx, my = e.touches[0].clientY - sy;
+  if(locked === null && (Math.abs(mx) > 8 || Math.abs(my) > 8)) locked = Math.abs(mx) > Math.abs(my) ? 'x' : 'y';
+  if(locked !== 'x') return;
+  dx = mx; cards[cur].classList.add('dragging'); layout(dx);
+}, {passive:true});
+deck.addEventListener('touchend', ()=>{
+  if(!dragging || cur < 0) return;
+  dragging = false; cards[cur].classList.remove('dragging');
+  if(locked === 'x' && dx < -80 && cur < cards.length - 1) go(cur + 1);
+  else if(locked === 'x' && dx > 80 && cur > 0) go(cur - 1);
+  else layout();
+});
+
+/* ================= Кириш ================= */
+document.getElementById('openBtn').onclick = e => {
+  const m = document.querySelector('.intro-mascot');
+  m.classList.remove('bob'); m.classList.add('jump');
+  confetti(innerWidth/2, innerHeight*.55, 120, 1.1);
+  setTimeout(()=>{
+    document.getElementById('intro').classList.add('gone');
+    document.getElementById('nav').classList.add('show');
+    go(0);
+  }, 650);
+};
+
+/* ================= Ёзилаётган хат ================= */
+const LETTER = "Ҳурматли устоз!\n\nСиз менга она тилимизни севишни ўргатгансиз. Ҳар бир сўзнинг қадри, ҳар бир шеърнинг жони борлигини сиздан билганман.\n\nБаъзан дарсга тайёрланмай келганман, баъзан шўхлик қилганман. Сиз эса барибир сабр билан тушунтиргансиз. Шунинг учун узр сўрайман.\n\nБугун мен фронтенд дастурчиман. Код ёзаётганимда ҳам сиз ўргатган аниқлик ва тартиб ҳар куни асқатади.";
+const typed = document.getElementById('typed'), writer = document.getElementById('writer');
+let typer = null, typedDone = false;
+function typeLetter(){
+  if(typedDone){ typed.textContent = LETTER; return; }
+  clearInterval(typer); let i = 0;
+  typed.innerHTML = '<span class="caret"></span>';
+  writer.classList.add('writing');
+  typer = setInterval(()=>{
+    i++;
+    typed.innerHTML = '';
+    typed.append(LETTER.slice(0, i));
+    const c = document.createElement('span'); c.className = 'caret'; typed.append(c);
+    const card = cards[2]; if(card.scrollHeight > card.clientHeight) card.scrollTop = card.scrollHeight;
+    if(i >= LETTER.length){ clearInterval(typer); typedDone = true; writer.classList.remove('writing'); }
+  }, 32);
+}
+function stopTyping(){ clearInterval(typer); writer.classList.remove('writing'); if(!typedDone){ typed.textContent = ''; } }
+
+/* ================= Айланувчи карталар ================= */
+const lessons = [
+  ['books','Китоб севгиси','Китоб — энг яқин дўст эканини сиздан билдим.','#fff'],
+  ['quill','Тўғри ёзиш','Ҳар бир вергул ўз жойида бўлиши кераклигини.','#FFD84D'],
+  ['heart','Шеърият','Шеърни ёд олишни эмас, ҳис қилишни.','#FFD0E5'],
+  ['speech','Фикр айтиш','Ўз фикримни дадил ва чиройли айта олишни.','#BFD0FF'],
+  ['hands','Одоб','Катталарга ҳурмат, кичикларга иззат кўрсатишни.','#FFDABF'],
+  ['sprout','Ўзига ишониш','Хато қилишдан қўрқмасликни.','#E2D4FF']
+];
+const flips = document.getElementById('flips');
+lessons.forEach(([ic,t,txt,bg],i)=>{
+  const f = document.createElement('div');
+  f.className = 'flip pop'; f.style.setProperty('--d', i + 2); f.style.setProperty('--rot', (i % 2 ? 2 : -2) + 'deg');
+  f.innerHTML = `<div class="flip-in"><div class="face" style="background:${bg}"><svg class="stk"><use href="#${ic}"/></svg><b>${t}</b></div><div class="face back">${txt}</div></div>`;
+  f.onclick = e => { f.classList.toggle('on'); if(f.classList.contains('on')) confetti(e.clientX, e.clientY, 14, .5); };
+  flips.appendChild(f);
+});
+
+/* ================= Табель ================= */
+const subjects = ['Билим','Сабр','Меҳр','Адолат','Синф раҳбарлиги'];
+const report = document.getElementById('report'), stamp = document.getElementById('stamp'), rhint = document.getElementById('rhint');
+let rated = 0;
+subjects.forEach(s=>{
+  const r = document.createElement('div');
+  r.className = 'rrow';
+  r.innerHTML = `<span>${s}</span><div class="stars">${'<svg viewBox="0 0 100 100"><use href="#star"/></svg>'.repeat(5)}</div>`;
+  r.onclick = e => {
+    if(r.dataset.done) return;
+    r.dataset.done = 1;
+    const st = r.querySelectorAll('.stars svg');
+    st.forEach((sv,k)=>setTimeout(()=>sv.classList.add('lit'), k * 110));
+    rated++;
+    if(rated === subjects.length){
+      setTimeout(()=>{
+        stamp.classList.add('show');
+        rhint.textContent = 'Ўртача баҳо: 5 — АЪЛО! 🎓';
+        const b = stamp.getBoundingClientRect();
+        confetti(b.left + b.width/2, b.top + b.height/2, 90, 1);
+      }, 700);
+    } else {
+      rhint.textContent = `${rated} / ${subjects.length}`;
+    }
+  };
+  report.appendChild(r);
+});
+
+
+/* ================= Устоздан хабар ================= */
+const form = document.getElementById('msgForm'), mText = document.getElementById('mText'), mName = document.getElementById('mName');
+const mCount = document.getElementById('mCount'), mErr = document.getElementById('mErr'), sendBtn = document.getElementById('sendBtn');
+const msgWrap = document.getElementById('msgWrap'), sent = document.getElementById('sent');
+mText.addEventListener('input', ()=>{ mCount.textContent = `${mText.value.length}/1500`; mErr.textContent = ''; });
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+  const text = mText.value.trim();
+  if(!text){ mErr.textContent = 'Илтимос, аввал хабар ёзинг 🙂'; mText.focus(); return; }
+  sendBtn.disabled = true; sendBtn.textContent = 'ЮБОРИЛМОҚДА…'; mErr.textContent = '';
+  try{
+    const r = await fetch('/api/send', { method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ text, name: mName.value.trim() }) });
+    const data = await r.json().catch(()=>({}));
+    if(!r.ok || !data.ok) throw new Error();
+    const b = sendBtn.getBoundingClientRect();
+    const plane = document.createElementNS('http://www.w3.org/2000/svg','svg');
+    plane.setAttribute('class','stk fly-plane'); plane.setAttribute('viewBox','0 0 100 100');
+    plane.innerHTML = '<use href="#plane"/>';
+    plane.style.left = (b.left + b.width/2 - 40) + 'px'; plane.style.top = (b.top - 30) + 'px';
+    document.body.appendChild(plane); setTimeout(()=>plane.remove(), 1500);
+    setTimeout(()=>{
+      msgWrap.style.display = 'none'; sent.classList.add('show');
+      confetti(innerWidth/2, innerHeight*.45, 120, 1.1);
+    }, 600);
+    mText.value = ''; mCount.textContent = '0/1500';
+  }catch{
+    mErr.textContent = 'Юбориб бўлмади. Интернетни текшириб, қайта уриниб кўринг.';
+  }finally{
+    sendBtn.disabled = false; sendBtn.textContent = 'ЮБОРИШ ✈️';
+  }
+});
+document.getElementById('againBtn').onclick = ()=>{ sent.classList.remove('show'); msgWrap.style.display = 'flex'; };
+
+/* ================= Якун ================= */
+document.getElementById('confettiBtn').onclick = e => {
+  const r = e.currentTarget.getBoundingClientRect();
+  confetti(r.left + r.width/2, r.top, 160, 1.3);
+  setTimeout(()=>confetti(innerWidth*.15, innerHeight*.7, 70, 1), 250);
+  setTimeout(()=>confetti(innerWidth*.85, innerHeight*.7, 70, 1), 450);
+};
+
+function onEnter(n){
+  if(n === 2) typeLetter(); else stopTyping();
+  if(n === cards.length - 1) setTimeout(()=>confetti(innerWidth/2, innerHeight*.35, 90, 1), 500);
+}
+</script>
+</body>
+</html>

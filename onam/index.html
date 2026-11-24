@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="uz-Cyrl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Онажонимга 🤍</title>
+<meta name="description" content="Дунёдаги энг меҳрибон онага — ўғлидан">
+<meta name="theme-color" content="#fbf3ea">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤍</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Caveat:wght@500;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#fbf3ea; --paper:#fffaf4; --rose:#c46f6a; --wine:#5b2a2a; --gold:#c39a52; --ink:#4a3431; --muted:#8a6f69;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    font-family:'Manrope',system-ui,sans-serif;color:var(--ink);overflow:hidden;
+    background:radial-gradient(1200px 600px at 50% -10%,#f7dcd2 0%,transparent 60%),var(--cream);
+    -webkit-font-smoothing:antialiased;
+  }
+  #petals{position:fixed;inset:0;pointer-events:none;z-index:1}
+
+  /* ---------- Конверт ---------- */
+  #intro{position:fixed;inset:0;z-index:50;display:grid;place-items:center;
+    background:radial-gradient(800px 500px at 50% 30%,#f9e3da,var(--cream));transition:opacity 1s ease, visibility 1s}
+  #intro.gone{opacity:0;visibility:hidden}
+  .env-wrap{text-align:center;padding:24px}
+  .env-to{font-size:15px;letter-spacing:.25em;text-transform:uppercase;color:var(--muted);margin-bottom:26px}
+  .envelope{position:relative;width:min(300px,78vw);aspect-ratio:3/2;margin:0 auto;cursor:pointer;
+    filter:drop-shadow(0 24px 40px rgba(91,42,42,.18));animation:float 4s ease-in-out infinite}
+  @keyframes float{50%{transform:translateY(-8px)}}
+  .env-back,.env-front,.env-flap{position:absolute;inset:0}
+  .env-back{background:#e9b9ad;border-radius:10px}
+  .env-letter{position:absolute;left:8%;right:8%;top:10%;bottom:8%;background:var(--paper);border-radius:6px;
+    display:grid;place-items:center;transition:transform .9s cubic-bezier(.2,.8,.2,1) .35s}
+  .env-letter span{font-family:'Caveat';font-size:28px;color:var(--rose);opacity:0;transition:opacity .5s .8s}
+  .envelope.open .env-letter span{opacity:1}
+  .env-front{border-radius:10px;
+    background:linear-gradient(135deg,#f2cbc0 50%,transparent 50%) left/50% 100% no-repeat,
+               linear-gradient(225deg,#f2cbc0 50%,transparent 50%) right/50% 100% no-repeat}
+  .env-front::after{content:"";position:absolute;left:0;right:0;bottom:0;height:62%;border-radius:0 0 10px 10px;
+    background:linear-gradient(to top right,#f6d5cb 50%,transparent 50%) left/50% 100% no-repeat,
+               linear-gradient(to top left,#f6d5cb 50%,transparent 50%) right/50% 100% no-repeat}
+  .env-flap{height:60%;transform-origin:top;transition:transform .7s ease;z-index:3;
+    background:linear-gradient(to bottom right,#e3a99b 50%,transparent 50%) left/50% 100% no-repeat,
+               linear-gradient(to bottom left,#e3a99b 50%,transparent 50%) right/50% 100% no-repeat}
+  .seal{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);z-index:4;width:54px;height:54px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,#d9837b,#a84d48);display:grid;place-items:center;color:#fff;font-size:22px;
+    box-shadow:0 4px 10px rgba(0,0,0,.18), inset 0 -3px 6px rgba(0,0,0,.15);transition:opacity .3s, transform .3s}
+  .envelope.open .env-flap{transform:rotateX(180deg);z-index:0}
+  .envelope.open .seal{opacity:0;transform:translate(-50%,-50%) scale(.6)}
+  .envelope.open .env-letter{transform:translateY(-55%)}
+  .env-hint{margin-top:30px;font-size:14px;color:var(--muted)}
+  .env-hint b{color:var(--rose);font-weight:600}
+
+  /* ---------- Саҳифалар ---------- */
+  #book{position:fixed;inset:0;z-index:2}
+  .page{
+    position:absolute;inset:0;overflow-y:auto;display:flex;flex-direction:column;justify-content:center;align-items:center;
+    padding:48px 22px 120px;text-align:center;
+    opacity:0;visibility:hidden;transform:translateX(50px);
+    transition:opacity .6s ease, transform .7s cubic-bezier(.2,.8,.2,1), visibility .7s;
+  }
+  .page.past{transform:translateX(-50px)}
+  .page.active{opacity:1;visibility:visible;transform:none}
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .5s ease, transform .5s ease}
+  .page.active .reveal{opacity:1;transform:none;transition:opacity 1s ease, transform 1s cubic-bezier(.2,.8,.2,1);
+    transition-delay:calc(var(--d,0) * 140ms + 300ms)}
+
+  .eyebrow{font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:16px}
+  h2{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:clamp(34px,8vw,56px);color:var(--wine);line-height:1.1;margin-bottom:16px}
+  .tip{font-size:14px;color:var(--muted)}
+
+  /* Бош */
+  .hero h1{font-family:'Cormorant Garamond',serif;font-weight:600;font-style:italic;font-size:clamp(60px,16vw,140px);line-height:1;
+    background:linear-gradient(120deg,var(--wine),var(--rose) 60%,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;padding:0 .08em .05em}
+  .hero p{max-width:440px;font-size:clamp(17px,4.4vw,20px);line-height:1.7;color:var(--muted);margin-top:20px}
+  .beat{font-size:34px;margin-bottom:10px;display:inline-block;animation:beat 1.6s ease-in-out infinite}
+  @keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.18)}30%{transform:scale(1)}45%{transform:scale(1.12)}}
+
+  /* Хат */
+  .letter{max-width:560px;width:100%;background:var(--paper);border-radius:6px;padding:34px 26px 30px;text-align:left;position:relative;
+    box-shadow:0 30px 60px -20px rgba(91,42,42,.22),0 0 0 1px rgba(196,111,106,.08);
+    background-image:repeating-linear-gradient(transparent 0 35px,rgba(196,111,106,.13) 35px 36px);background-position:0 16px}
+  .letter::before{content:"";position:absolute;left:18px;top:0;bottom:0;width:1px;background:rgba(196,111,106,.25)}
+  .letter p{font-family:'Caveat',cursive;font-size:clamp(21px,5.4vw,26px);line-height:36px;color:#4b3532;padding-left:10px}
+  .letter p + p{margin-top:18px}
+  .letter .reveal{transform:none}
+  .page.active .letter .reveal{transition:opacity 1.4s ease;transition-delay:calc(var(--d,0) * 1000ms + 600ms)}
+  .sign{text-align:right;color:var(--rose)!important}
+
+  /* Ҳисоблагич */
+  .counter{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;width:100%;max-width:520px;margin:24px 0 22px}
+  .cell{background:var(--paper);border-radius:16px;padding:16px 4px;box-shadow:0 12px 30px -14px rgba(91,42,42,.25)}
+  .cell b{display:block;font-family:'Cormorant Garamond',serif;font-size:clamp(28px,7vw,44px);color:var(--wine);font-variant-numeric:tabular-nums;line-height:1}
+  .cell span{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+  .counter-note{max-width:440px;color:var(--muted);line-height:1.7;font-size:16px}
+
+  /* Карталар */
+  .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;max-width:640px;width:100%;margin-top:14px}
+  .card{background:var(--paper);border-radius:18px;padding:16px 14px;text-align:left;box-shadow:0 14px 34px -18px rgba(91,42,42,.28)}
+  .card .ic{font-size:24px;margin-bottom:6px}
+  .card h3{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--wine);margin-bottom:4px;line-height:1.15}
+  .card p{color:var(--muted);line-height:1.45;font-size:13px}
+  @media (min-width:700px){.cards{grid-template-columns:repeat(3,1fr)}.card{padding:22px}.card p{font-size:15px}}
+
+  /* Юракчалар */
+  .hearts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:340px;width:100%;margin:24px 0 22px}
+  .hearts button{aspect-ratio:1;border:0;border-radius:20px;background:var(--paper);font-size:28px;cursor:pointer;
+    box-shadow:0 10px 24px -14px rgba(91,42,42,.3);transition:transform .25s, background .3s}
+  .hearts button:active{transform:scale(.9)}
+  .hearts button.used{background:#f6dcd4}
+  .whisper{min-height:110px;max-width:460px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(23px,5.6vw,30px);color:var(--wine);line-height:1.35;transition:opacity .4s}
+
+  /* Якун */
+  .final h2{font-size:clamp(44px,11vw,84px);font-style:italic}
+  .dua{max-width:460px;line-height:1.8;color:var(--muted);font-size:17px}
+  .from{margin-top:30px;font-family:'Caveat';font-size:30px;color:var(--rose)}
+  .big-heart{margin-top:30px;width:84px;height:84px;border-radius:50%;border:0;cursor:pointer;font-size:38px;color:#fff;
+    background:radial-gradient(circle at 35% 30%,#e08c84,#b4524c);box-shadow:0 18px 40px -10px rgba(180,82,76,.55)}
+  .big-heart span{display:inline-block;animation:beat 1.6s ease-in-out infinite}
+
+  /* ---------- Навигация ---------- */
+  #nav{position:fixed;left:0;right:0;bottom:0;z-index:10;display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:16px 20px calc(16px + env(safe-area-inset-bottom));
+    background:linear-gradient(to top,var(--cream) 55%,transparent);opacity:0;transition:opacity .8s}
+  #nav.show{opacity:1}
+  .dots{display:flex;gap:6px;flex:1;justify-content:center}
+  .dots i{width:7px;height:7px;border-radius:9px;background:#e6cbc3;transition:all .4s}
+  .dots i.on{width:22px;background:var(--rose)}
+  .nbtn{border:0;cursor:pointer;font-family:inherit;font-weight:600;font-size:15px;border-radius:999px;transition:opacity .3s, transform .2s}
+  .nbtn:active{transform:scale(.95)}
+  #prev{width:48px;height:48px;background:var(--paper);color:var(--wine);box-shadow:0 8px 20px -10px rgba(91,42,42,.35);font-size:20px}
+  #next{height:48px;padding:0 22px;background:var(--wine);color:#fff;box-shadow:0 12px 24px -10px rgba(91,42,42,.55);min-width:132px}
+  .nbtn:disabled{opacity:0;pointer-events:none}
+
+  .burst{position:fixed;pointer-events:none;z-index:60;font-size:22px;color:var(--rose);animation:fly 1.6s ease-out forwards}
+  @keyframes fly{to{transform:translate(var(--dx),var(--dy)) rotate(var(--r));opacity:0}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+
+<canvas id="petals"></canvas>
+
+<div id="intro">
+  <div class="env-wrap">
+    <div class="env-to">Онажонимга</div>
+    <div class="envelope" id="envelope" role="button" aria-label="Хатни очиш" tabindex="0">
+      <div class="env-back"></div>
+      <div class="env-letter"><span>сизга 🤍</span></div>
+      <div class="env-front"></div>
+      <div class="env-flap"></div>
+      <div class="seal">♥</div>
+    </div>
+    <p class="env-hint">Хатни очиш учун <b>конвертга босинг</b></p>
+  </div>
+</div>
+
+<div id="book">
+  <!-- 1 -->
+  <section class="page hero">
+    <div class="beat reveal">🤍</div>
+    <h1 class="reveal" style="--d:1">Онажоним</h1>
+    <p class="reveal" style="--d:2">Бу саҳифа фақат сиз учун. Ҳар куни айтишга уяладиган, лекин ҳар доим юрагимда турадиган гапларимни шу ерга ёздим.</p>
+  </section>
+
+  <!-- 2 -->
+  <section class="page">
+    <div class="eyebrow reveal">Сизга хат · 1</div>
+    <div class="letter reveal" style="--d:1">
+      <p class="reveal" style="--d:0">Ассалому алайкум, онажоним.</p>
+      <p class="reveal" style="--d:1">Мен ҳаётда кўп нарсани ўргандим, лекин энг биринчи сўзни, энг биринчи қадамни, энг биринчи дуони сиздан ўрганганман.</p>
+      <p class="reveal" style="--d:2">Касал бўлганимда тонг отгунча ёнимда ўтиргансиз. Қорним тўқ бўлсин деб ўзингиз кам егансиз. Хафа бўлсам, биринчи бўлиб сиз сезгансиз.</p>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section class="page">
+    <div class="eyebrow reveal">Сизга хат · 2</div>
+    <div class="letter reveal" style="--d:1">
+      <p class="reveal" style="--d:0">Буларнинг ҳаммасини ўшанда тушунмаганман. Энди катта бўлиб, ҳар бирининг қадрини биляпман.</p>
+      <p class="reveal" style="--d:1">Кечиринг, баъзида чарчатган бўлсам, гапингизни ўз вақтида қилмаган бўлсам. Сиз учун доим яхши фарзанд бўлишга ҳаракат қиламан.</p>
+      <p class="reveal sign" style="--d:2">Сизни чексиз яхши кўраман 🤍</p>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section class="page">
+    <div class="eyebrow reveal">Сиз мени севиб келган вақт</div>
+    <h2 class="reveal" style="--d:1">Ҳар бир сонияси —<br>сизнинг меҳрингиз</h2>
+    <div class="counter reveal" style="--d:2">
+      <div class="cell"><b id="cY">0</b><span>йил</span></div>
+      <div class="cell"><b id="cD">0</b><span>кун</span></div>
+      <div class="cell"><b id="cH">0</b><span>соат</span></div>
+      <div class="cell"><b id="cM">0</b><span>дақиқа</span></div>
+      <div class="cell"><b id="cS">0</b><span>сония</span></div>
+    </div>
+    <p class="counter-note reveal" style="--d:3">Мен туғилган кундан бери — <b id="cTotal">0</b> кун. Шу кунларнинг бирортасида ҳам сиз мени дуо қилишни унутмагансиз.</p>
+  </section>
+
+  <!-- 5 -->
+  <section class="page">
+    <div class="eyebrow reveal">Раҳмат, онажон</div>
+    <h2 class="reveal" style="--d:1">Сиз учун раҳмат</h2>
+    <div class="cards">
+      <div class="card reveal" style="--d:2"><div class="ic">🌙</div><h3>Уйқусиз тунларингиз</h3><p>Мен тинч ухлашим учун қанча тунни бедор ўтказгансиз.</p></div>
+      <div class="card reveal" style="--d:3"><div class="ic">🤲</div><h3>Дуоларингиз</h3><p>Ҳар бир ютуғим ортида сизнинг дуоингиз турибди.</p></div>
+      <div class="card reveal" style="--d:4"><div class="ic">🍲</div><h3>Қўлингиз таъми</h3><p>Дунёдаги энг мазали таом — сиз пиширган овқат.</p></div>
+      <div class="card reveal" style="--d:5"><div class="ic">🏡</div><h3>Уйимиз иссиқлиги</h3><p>Уй — бу деворлар эмас. Уй — бу сиз бор жой.</p></div>
+      <div class="card reveal" style="--d:6"><div class="ic">💪</div><h3>Сабрингиз</h3><p>Қийин кунларда ҳам ҳаммамизга суянч бўлгансиз.</p></div>
+      <div class="card reveal" style="--d:7"><div class="ic">✨</div><h3>Менга ишонганингиз</h3><p>Ҳамма шубҳа қилганда ҳам «ўғлим уддалайди» дегансиз.</p></div>
+    </div>
+  </section>
+
+  <!-- 6 -->
+  <section class="page">
+    <div class="eyebrow reveal">Юрагимдаги гаплар</div>
+    <h2 class="reveal" style="--d:1">Юракчаларни босинг</h2>
+    <div class="hearts reveal" style="--d:2" id="hearts"></div>
+    <div class="whisper" id="whisper"></div>
+    <p class="tip" id="tip">Ҳар бир юрак ичида сизга битта гап бор</p>
+  </section>
+
+  <!-- 7 -->
+  <section class="page final">
+    <div class="eyebrow reveal">Ва энг муҳими</div>
+    <h2 class="reveal" style="--d:1">Сизни яхши<br>кўраман, онажон</h2>
+    <p class="dua reveal" style="--d:2">Аллоҳ сизга узоқ умр, сиҳат-саломатлик берсин. Сизнинг кулгингизни ҳар куни кўриш — мен учун энг катта бахт.</p>
+    <div class="from reveal" style="--d:3">— Ўғлингиз Раҳматуллоҳ</div>
+    <button class="big-heart reveal" style="--d:4" id="bigHeart" aria-label="Юрак юбориш"><span>♥</span></button>
+    <p class="tip reveal" style="--d:5;margin-top:12px">босиб кўринг</p>
+  </section>
+</div>
+
+<nav id="nav">
+  <button class="nbtn" id="prev" aria-label="Олдинги">‹</button>
+  <div class="dots" id="dots"></div>
+  <button class="nbtn" id="next">Кейинги →</button>
+</nav>
+
+<script>
+/* ---------- Саҳифалар ---------- */
+const pages = [...document.querySelectorAll('.page')];
+const dots = document.getElementById('dots');
+const prevB = document.getElementById('prev'), nextB = document.getElementById('next');
+pages.forEach(()=>dots.appendChild(document.createElement('i')));
+let cur = -1;
+function go(n){
+  if(n < 0 || n >= pages.length || n === cur) return;
+  cur = n;
+  pages.forEach((p,i)=>{
+    p.classList.toggle('active', i === n);
+    p.classList.toggle('past', i < n);
+    if(i === n) p.scrollTop = 0;
+  });
+  [...dots.children].forEach((d,i)=>d.classList.toggle('on', i === n));
+  prevB.disabled = n === 0;
+  nextB.textContent = n === pages.length - 1 ? 'Бошидан ↺' : 'Кейинги →';
+}
+nextB.onclick = ()=> cur === pages.length - 1 ? go(0) : go(cur + 1);
+prevB.onclick = ()=> go(cur - 1);
+addEventListener('keydown', e=>{
+  if(cur < 0) return;
+  if(e.key === 'ArrowRight') go(cur + 1);
+  if(e.key === 'ArrowLeft') go(cur - 1);
+});
+let tx = 0, ty = 0;
+addEventListener('touchstart', e=>{ tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, {passive:true});
+addEventListener('touchend', e=>{
+  if(cur < 0) return;
+  const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+  if(Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) go(cur + (dx < 0 ? 1 : -1));
+});
+
+/* ---------- Конверт ---------- */
+const intro = document.getElementById('intro'), env = document.getElementById('envelope');
+function openEnvelope(){
+  if(env.classList.contains('open')) return;
+  env.classList.add('open');
+  setTimeout(()=>{ intro.classList.add('gone'); document.getElementById('nav').classList.add('show'); go(0); }, 1500);
+}
+env.addEventListener('click', openEnvelope);
+env.addEventListener('keydown', e=>{ if(e.key === 'Enter' || e.key === ' ') openEnvelope(); });
+
+/* ---------- Ҳисоблагич (туғилган кун: 24.05.2007) ---------- */
+const BORN = new Date(2007, 4, 24);
+function tick(){
+  const now = new Date();
+  let years = now.getFullYear() - BORN.getFullYear();
+  const anniv = new Date(BORN); anniv.setFullYear(BORN.getFullYear() + years);
+  if(anniv > now){ years--; anniv.setFullYear(anniv.getFullYear() - 1); }
+  const diff = now - anniv;
+  cY.textContent = years;
+  cD.textContent = Math.floor(diff / 864e5);
+  cH.textContent = Math.floor(diff % 864e5 / 36e5);
+  cM.textContent = Math.floor(diff % 36e5 / 6e4);
+  cS.textContent = Math.floor(diff % 6e4 / 1e3);
+  cTotal.textContent = Math.floor((now - BORN) / 864e5).toLocaleString('ru-RU');
+}
+tick(); setInterval(tick, 1000);
+
+/* ---------- Юракчалар ---------- */
+const lines = [
+  "Сиз менинг биринчи устозим ва энг яқин дўстимсиз.",
+  "Қаерда бўлмай, сизнинг дуоингиз мени асрайди.",
+  "Кулганингизни кўрсам, дунё ёришиб кетади.",
+  "Сизнинг «болам» деганингиздан илиқроқ сўз йўқ.",
+  "Бир кун албатта сизни роса хурсанд қиламан — ваъда.",
+  "Чарчаганингизни кўрсам, юрагим оғрийди. Ўзингизни асранг.",
+  "Сиз менга ҳаёт бердингиз. Мен сизга меҳримни бераман.",
+  "Жаннат оналар оёғи остида — мен буни сизни кўриб тушунаман."
+];
+const icons = ['🤍','💗','🌷','💐','🌸','💞','🕊️','✨'];
+const hb = document.getElementById('hearts'), wh = document.getElementById('whisper'), tip = document.getElementById('tip');
+let opened = 0;
+icons.forEach((ic,i)=>{
+  const b = document.createElement('button');
+  b.textContent = ic; b.setAttribute('aria-label', (i+1) + '-гап');
+  b.onclick = e => {
+    wh.style.opacity = 0;
+    setTimeout(()=>{ wh.textContent = lines[i]; wh.style.opacity = 1; }, 250);
+    if(!b.classList.contains('used')){ b.classList.add('used'); opened++; }
+    tip.textContent = opened === lines.length ? "Ҳаммасини ўқидингиз — лекин юрагимдаги гаплар тугамайди 🤍" : `${opened} / ${lines.length}`;
+    burst(e.clientX, e.clientY, 6);
+  };
+  hb.appendChild(b);
+});
+
+/* ---------- Юрак портлаши ---------- */
+function burst(x, y, n=14){
+  for(let i=0;i<n;i++){
+    const s = document.createElement('span');
+    s.className = 'burst'; s.textContent = ['♥','🤍','💗','🌸'][i%4];
+    s.style.left = x+'px'; s.style.top = y+'px';
+    const a = Math.random()*Math.PI*2, d = 60 + Math.random()*120;
+    s.style.setProperty('--dx', Math.cos(a)*d+'px');
+    s.style.setProperty('--dy', (Math.sin(a)*d - 60)+'px');
+    s.style.setProperty('--r', (Math.random()*80-40)+'deg');
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(), 1700);
+  }
+}
+document.getElementById('bigHeart').addEventListener('click', e=>{
+  const r = e.currentTarget.getBoundingClientRect();
+  burst(r.left + r.width/2, r.top + r.height/2, 22);
+});
+
+/* ---------- Гул барглари ---------- */
+const cv = document.getElementById('petals'), ctx = cv.getContext('2d');
+let W, H;
+function resize(){ W = cv.width = innerWidth * devicePixelRatio; H = cv.height = innerHeight * devicePixelRatio; }
+resize(); addEventListener('resize', resize);
+const colors = ['#f2b8ae','#eec7bd','#f7d6cf','#e9a99e','#f5e1c8'];
+const petals = Array.from({length:22}, ()=>newPetal(true));
+function newPetal(init){
+  return { x:Math.random()*W, y:init ? Math.random()*H : -20, s:(6+Math.random()*8)*devicePixelRatio,
+    vy:(.3+Math.random()*.6)*devicePixelRatio, vx:(Math.random()-.5)*.4*devicePixelRatio,
+    r:Math.random()*6.28, vr:(Math.random()-.5)*.02, sw:Math.random()*6.28, c:colors[Math.floor(Math.random()*colors.length)] };
+}
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  petals.forEach((p,k)=>{
+    p.y += p.vy; p.sw += .01; p.x += p.vx + Math.sin(p.sw)*.4; p.r += p.vr;
+    if(p.y > H + 20) petals[k] = newPetal(false);
+    ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.r); ctx.globalAlpha = .55;
+    ctx.fillStyle = p.c; ctx.beginPath(); ctx.ellipse(0,0,p.s,p.s*.6,0,0,6.28); ctx.fill(); ctx.restore();
+  });
+  requestAnimationFrame(draw);
+}
+if(!matchMedia('(prefers-reduced-motion: reduce)').matches) draw();
+</script>
+</body>
+</html>
