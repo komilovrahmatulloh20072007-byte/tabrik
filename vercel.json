@@ -1,9 +1,8 @@
 {
-  "cleanUrls": true,
   "rewrites": [
     {
       "source": "/",
-      "has": [{ "type": "host", "value": "(?<h>.*ustoz.*)" }],
+      "has": [{ "type": "host", "value": ".*ustoz.*" }],
       "destination": "/ustoz/index.html"
     },
     {
